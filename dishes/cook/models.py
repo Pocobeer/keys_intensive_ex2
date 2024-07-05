@@ -12,9 +12,10 @@ class Ingredients(models.Model):
     ingredient_name = models.CharField(max_length=50)
     ingredient_price = models.FloatField()
     types = (
-        (0, "fish"),
-        (1, "meat"),
-        (2, "vegetables"),
+        (0, "None")
+        (1, "fish"),
+        (2, "meat"),
+        (3, "vegetables"),
     )
     ingredient_type = models.IntegerField(choices=types, default=0)
 
