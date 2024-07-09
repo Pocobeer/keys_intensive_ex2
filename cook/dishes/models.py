@@ -12,10 +12,9 @@ class Ingredients(models.Model):
     ingredient_name = models.CharField(max_length=50)
     ingredient_price = models.FloatField()
     types = (
-        (0, "None")
-        (1, "fish"),
-        (2, "meat"),
-        (3, "vegetables"),
+        (0, "fish"),
+        (1, "meat"),
+        (2, "vegetables"),
     )
     ingredient_type = models.IntegerField(choices=types, default=0)
 
@@ -24,4 +23,4 @@ class Dish(models.Model):
     dish_price = models.FloatField()
     dish_rating = models.FloatField()
     dish_ingredients = models.ManyToManyField(Ingredients)
-    dish_povars = models.ManyToManyField(Povar)
+    dish_povars = models.ForeignKey(Povar, on_delete=models.CASCADE)
