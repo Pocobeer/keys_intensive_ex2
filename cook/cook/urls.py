@@ -15,8 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from dishes.views import PovarViewSet, IngredientsListCreate, DishListCreate, DishDetail
 
+
+router = DefaultRouter()
+router.register(r'povars', PovarViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dishes/', include('dishes.urls')),
+    path('api/', include(router.urls)),
+    path('api/ingredients/', IngredientsListCreate.as_view()),
+    path('api/dishes/', DishListCreate.as_view()),
 ]
