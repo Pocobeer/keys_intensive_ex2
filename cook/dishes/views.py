@@ -4,16 +4,32 @@ from django.shortcuts import render
 from .models import Povar, Dish, Ingredients
 from rest_framework import permissions, viewsets, generics, views
 from .serializers import PovarSerializer, DishSerializer, IngredientsSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
 
 class PovarViewSet(viewsets.ModelViewSet):
     queryset = Povar.objects.all()
     serializer_class = PovarSerializer
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        token = self.request.query_params.get('token')
+        if token:
+            user = TokenAuthentication().authenticate_credentials(token.encode())
+            self.request.user = user
+        return super().get_queryset()
+
 
 class IngredientsListCreate(generics.ListCreateAPIView):
     queryset = Ingredients.objects.all()
     serializer_class = IngredientsSerializer
+    permission_classes = [IsAuthenticated]
+
 
 class DishListCreate(views.APIView):
+    permission_classes = [IsAuthenticated]
     def get_queryset(self):
         dish = self.request.dish
         return dish.objects.all()
@@ -27,7 +43,9 @@ class DishListCreate(views.APIView):
         else:
             return self.response(serializer.errors)
 
+
 class DishDetail(views.APIView):
+    permission_classes = [IsAuthenticated]
     def get_object(self, pk):
         try:
             return Dish.objects.get(pk=pk)
@@ -44,3 +62,7 @@ class DishDetail(views.APIView):
         dish.delete()
         return self.response()
     
+
+
+for user in User.objects.all():
+    Token.objects.get_or_create(user=user)

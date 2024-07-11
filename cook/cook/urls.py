@@ -15,15 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from dishes.views import PovarViewSet, IngredientsListCreate, DishListCreate, DishDetail
+from rest_framework.authtoken import views as authtoken_views
 
-
-router = DefaultRouter()
-router.register(r'povars', PovarViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
-    path('api/ingredients/', IngredientsListCreate.as_view()),
-    path('api/dishes/', DishListCreate.as_view()),
+    path('api/', include('dishes.urls')),  
+    path('api-token-auth/', authtoken_views.obtain_auth_token),
 ]
