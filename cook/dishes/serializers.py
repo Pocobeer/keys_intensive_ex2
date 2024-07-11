@@ -7,10 +7,12 @@ class PovarSerializer(serializers.ModelSerializer):
         model = Povar
         fields = '__all__'
 
+
 class IngredientsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredients
         fields = '__all__'
+
 
 class DishSerializer(serializers.ModelSerializer):
     class Meta:
