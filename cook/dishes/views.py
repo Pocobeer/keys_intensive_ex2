@@ -64,5 +64,5 @@ class DishDetail(views.APIView):
     
 
 
-for user in User.objects.all():
-    Token.objects.get_or_create(user=user)
+# for user in User.objects.all():
+#     Token.objects.get_or_create(user=user)
