@@ -2,7 +2,9 @@ from django.shortcuts import render
 
 # Create your views here.
 from .models import Povar, Dish, Ingredients
-from rest_framework import permissions, viewsets, generics, views
+from rest_framework import permissions, viewsets, generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .serializers import PovarSerializer, DishSerializer, IngredientsSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
@@ -28,40 +30,19 @@ class IngredientsListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
 
-class DishListCreate(views.APIView):
+class DishListCreate(APIView):
     permission_classes = [IsAuthenticated]
-    def get_queryset(self):
-        dish = self.request.dish
-        return dish.objects.all()
-    def get_serializer_class(self):
-        return self.serializer_class
+    def get(self, request):
+        dishes = Dish.objects.all()
+        serializer = DishSerializer(dishes, many=True)
+        return Response(serializer.data)
+
     def post(self, request):
         serializer = DishSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return self.response(serializer.data)
-        else:
-            return self.response(serializer.errors)
-
-
-class DishDetail(views.APIView):
-    permission_classes = [IsAuthenticated]
-    def get_object(self, pk):
-        try:
-            return Dish.objects.get(pk=pk)
-        except Dish.DoesNotExist:
-            return None
-
-    def get(self, request, pk):
-        dish = self.get_object(pk)
-        serializer = DishSerializer(dish)
-        return self.response(serializer.data)
-    
-    def delete(self, request, pk):
-        dish = self.get_object(pk)
-        dish.delete()
-        return self.response()
-    
+            return Response(serializer.data)
+        return Response(serializer.errors)
 
 
 # for user in User.objects.all():
