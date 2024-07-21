@@ -6,7 +6,7 @@
       <input v-model="povar.experience" placeholder="Опыт" class="x-input">
       <input v-model="povar.rating" placeholder="Рейтинг" class="x-input">
       <input v-model="povar.age" placeholder="Возраст" class="x-input">
-      <button @create="createPovar" style="width: max-content; align-self: flex-end;" class="x-btn">Добавить повара</button>
+      <button @create="createPovar" style="width: max-content; align-self: flex-end;" class="success">Добавить повара</button>
     </form>
   </div>
 </template>
@@ -26,7 +26,9 @@ export default {
   },
   methods: {
     createPovar() {
-      this.$emit('create', { ...this.povar });
+      this.$emit('create', { 
+        id: Date.now(),
+        ...this.povar });
       // Очистка полей после отправки формы
       this.povar.name = '';
       this.povar.experience = '';
@@ -41,27 +43,9 @@ export default {
 <style scoped>
 .x-form {
   background: white;
-  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
   padding: 1px 10px 10px 10px;
   margin-top: 15px;
   display: flex;
   flex-direction: column;
 }
-
-.x-input {
-  height: 25px;
-  padding: 5px;
-  margin-bottom: 10px;
-  border: 1px solid #bdbdbd;
-  font-size: 16px;
-  border-radius: 0.25rem;
-  outline: 0;
-}
-
-.x-input:focus {
-  border-color: #bdbdbd;
-  box-shadow: 0 0 0 0.1rem rgba(158, 158, 158, 0.25);
-}
-
 </style>
