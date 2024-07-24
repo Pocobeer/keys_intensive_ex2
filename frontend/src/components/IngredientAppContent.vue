@@ -13,7 +13,8 @@ export default {
       sortOptions: [
         {value: 'name', name: 'По имени'},
         {value: 'experience', name: 'По цене'},
-      ]
+      ],
+      searchText: ''
     }
   },
   mounted(){
@@ -64,10 +65,22 @@ export default {
     }
   },
   computed: {
-    sortedIngredients(){
-      return [...this.ingredients].sort(
-        (pov1, pov2) => pov1[this.selectSort]?.localeCompare(pov2[this.selectSort])
-      )
+    sortedIngredients() {
+      return [...this.ingredients].sort((pov1, pov2) => {
+        const value1 = pov1[this.selectSort];
+        const value2 = pov2[this.selectSort];
+
+        // Проверка, что значения являются строками
+        if (typeof value1 === 'string' && typeof value2 === 'string') {
+          return value1.localeCompare(value2);
+        }
+        
+        // Если значения не строки, просто сравниваем их напрямую
+        return (value1 > value2) ? 1 : (value1 < value2) ? -1 : 0;
+      });
+    },
+    sortedAndSearched(){
+      return this.sortedIngredients.filter(dish => dish.name.toLowerCase().includes(this.searchText.toLowerCase()))
     }
   }
 }
@@ -81,11 +94,12 @@ export default {
       </x-dialog>
       <div class = "x-actions">
         <x-select :options="sortOptions" v-model="selectSort"></x-select>
+        <x-input v-model="searchText" style = "margin-left: 10px; width: 100%; margin-right: 10px;" placeholder = "Поиск"></x-input>
         <x-button @click="showCreateForm = true" 
         style="margin-left: auto; margin-right: 10px">Добавить ингредиент
       </x-button>
       </div>
-      <ingredients-list :ingredients="sortedIngredients" @remove="removeIngredient"></ingredients-list>
+      <ingredients-list :ingredients="sortedAndSearched" @remove="removeIngredient"></ingredients-list>
     </div>
   </div>
 </template>

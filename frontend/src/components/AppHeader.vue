@@ -1,4 +1,6 @@
 <script>
+import BeautifulPage from '@/pages/BeautifulPage.vue';
+
 export default {
     name: "AppHeader",
     methods:{
@@ -14,6 +16,9 @@ export default {
         },
         ingredientpage(){
             this.$router.push('/IngredientPage')
+        },
+        BeautifulPage(){
+            this.$router.push('/BeautifulPage')
         }
     }
 }
@@ -25,6 +30,7 @@ export default {
         <x-button @click="povarpage">Поварs</x-button>
         <x-button @click="dishpage">Блюда</x-button>
         <x-button @click="ingredientpage">Ингредиенты</x-button>
+        <x-button @click="BeautifulPage">vuetify</x-button>
         <x-button @click="logout">Выход</x-button>
     </div>
 </template>

@@ -1,33 +1,67 @@
+<template>
+  <v-container>
+    <v-dialog v-model="showCreateForm">
+      <create-form @create="createPovar"></create-form>
+    </v-dialog>
+    <v-row align="center" no-gutters>
+      <v-col cols="12" sm="4">
+        <v-select :items="sortOptions" v-model="selectSort" label="Сортировать по"></v-select>
+      </v-col>
+      <v-col cols="12" sm="4">
+        <v-text-field v-model="searchText" label="Поиск"></v-text-field>
+      </v-col>
+      <v-col cols="12" sm="4" class="text-right">
+        <v-btn @click="showCreateForm = true">Добавить повара</v-btn>
+      </v-col>
+    </v-row>
+    <v-list>
+      <v-list-item-group v-if="sortedAndSearched.length">
+        <v-list-item v-for="povar in sortedAndSearched" :key="povar.id">
+          <v-list-item-content>
+            <v-list-item-title>{{ povar.name }}</v-list-item-title>
+            <v-list-item-subtitle>Возраст: {{ povar.age }}</v-list-item-subtitle>
+            <v-list-item-subtitle>Опыт: {{ povar.experience }}</v-list-item-subtitle>
+            <v-list-item-subtitle>Рейтинг: {{ povar.rating }}</v-list-item-subtitle>
+            <v-list-item-actions>
+              <v-btn @click="removePovar(povar)" color="red">Удалить</v-btn>
+            </v-list-item-actions>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
+      <v-card v-else>
+        <v-card-text>Нет данных</v-card-text>
+      </v-card>
+    </v-list>
+  </v-container>
+</template>
+
 <script>
+import axios from 'axios';
 import CreateForm from "@/components/CreateForm.vue";
-import PovarsList from "@/components/PovarsList.vue";
 
 export default {
   name: "AppContent",
-  components: {CreateForm, PovarsList},
+  components: { CreateForm },
   data() {
     return {
       povars: [],
       showCreateForm: false,
       selectSort: '',
       sortOptions: [
-        {value: 'name', name: 'По имени'},
-        {value: 'experience', name: 'По опыту'},
+        { value: 'name', name: 'По имени' },
+        { value: 'experience', name: 'По опыту' },
       ],
-      searchText:''
+      searchText: ''
     }
   },
-  mounted(){
-    this.$ajax.get('api/povars/')
+  mounted() {
+    axios.get('api/povars/')
       .then(response => {
         console.log('API Response:', response.data);
-
-        // Извлекаем массив данных из свойства `results`
         const results = response.data.results;
         console.log('Extracted Results:', results);
 
         if (Array.isArray(results)) {
-          // Преобразуем данные в формат, ожидаемый компонентом
           this.povars = results.map(povar => ({
             id: povar.id,
             name: povar.Povar_name,
@@ -35,7 +69,6 @@ export default {
             rating: povar.Povar_rating,
             age: povar.Povar_age
           }));
-          
           console.log('Transformed Povars:', this.povars);
         } else {
           console.error('Expected array but got:', results);
@@ -52,11 +85,11 @@ export default {
       console.log(data)
       this.povars.push(data)
     },
-    removePovar(povar){
+    removePovar(povar) {
       const url = `api/povars/${povar.id}`;
       console.log('Deleting Povar URL:', url);
 
-      this.$ajax.delete(url)
+      axios.delete(url)
         .then(() => {
           this.povars = this.povars.filter(elem => elem.id !== povar.id);
         })
@@ -66,48 +99,25 @@ export default {
     }
   },
   computed: {
-    sortedPovars(){
+    sortedPovars() {
       return [...this.povars].sort((pov1, pov2) => {
         const value1 = pov1[this.selectSort];
         const value2 = pov2[this.selectSort];
-
-        // Проверка, что значения являются строками
         if (typeof value1 === 'string' && typeof value2 === 'string') {
           return value1.localeCompare(value2);
         }
-        
-        // Если значения не строки, просто сравниваем их напрямую
         return (value1 > value2) ? 1 : (value1 < value2) ? -1 : 0;
       });
     },
-    sortedAndSearched(){
+    sortedAndSearched() {
       return this.sortedPovars.filter(povar => povar.name.toLowerCase().includes(this.searchText.toLowerCase()))
     }
   }
 }
 </script>
 
-<template>
-  <div>
-    <div class="x-content">
-      <x-dialog v-model="showCreateForm">
-        <create-form @create="createPovar"></create-form>
-      </x-dialog>
-      <div class = "x-actions">
-        <x-select :options="sortOptions" v-model="selectSort"></x-select>
-        <x-input v-model="searchText" style = "margin-left: 10px; width: 100%; margin-right: 10px;" placeholder = "Поиск"></x-input>
-        <x-button @click="showCreateForm = true" 
-        style="margin-left: auto; margin-right: 10px">Добавить повара
-      </x-button>
-      </div>
-      <povars-list :povars="sortedAndSearched" @remove="removePovar"></povars-list>
-    </div>
-  </div>
-</template>
-
 <style scoped>
-.x-actions {
-  display: flex;
-  margin-top: 15px;
+.text-right {
+  text-align: right;
 }
 </style>

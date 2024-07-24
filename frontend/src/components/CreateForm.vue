@@ -2,17 +2,25 @@
   <div>
     <form class="x-form" @submit.prevent="createPovar">
       <h1>Добавить повара</h1>
-      <input v-model="povar.name" placeholder="Имя" class="x-input">
-      <input v-model="povar.experience" placeholder="Опыт" class="x-input">
-      <input v-model="povar.rating" placeholder="Рейтинг" class="x-input">
-      <input v-model="povar.age" placeholder="Возраст" class="x-input">
-      <button @create="createPovar" style="width: max-content; align-self: flex-end;" class="success">Добавить повара</button>
+      <x-input v-model="povar.name" placeholder="Имя" v-focus></x-input>
+      <x-input v-model="povar.experience" placeholder="Опыт"></x-input>
+      <x-input v-model="povar.rating" placeholder="Рейтинг"></x-input>
+      <x-input v-model="povar.age" placeholder="Возраст"></x-input>
+      <x-button @create="createPovar" style="width: max-content; align-self: flex-end;" class="success">Добавить повара</x-button>
+      <x-button @click="hello" type = "button">Миксин</x-button>
     </form>
   </div>
 </template>
 
 <script>
+import XMixin from '@/mixins/XMixin';
+import XButton from './UI/XButton.vue';
+
 export default {
+  components: {
+    XButton
+  },
+  mixins: [XMixin],
   name: "CreateForm",
   data() {
     return {
@@ -23,6 +31,9 @@ export default {
         age: ''
       }
     }
+  },
+  mounted(){
+    console.log('aaaaa')
   },
   methods: {
     createPovar() {

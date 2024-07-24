@@ -5,6 +5,7 @@ import LoginForm from "@/components/LoginForm.vue";
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
+import BeautifulPage from "@/pages/BeautifulPage.vue";
 
 Vue.use(VueRouter)
 
@@ -12,7 +13,6 @@ const routes = [
     {
         path: '/',
         component: PovarPage,
-        meta: {requiresAuth: true}
     },
     {
         path: '/login',
@@ -32,6 +32,11 @@ const routes = [
     {
         path: '/IngredientPage',
         component: IngredientPage,
+        meta: {requiresAuth: true}
+    },
+    {
+        path: '/BeautifulPage',
+        component: BeautifulPage,
         meta: {requiresAuth: true}
     }
 ]

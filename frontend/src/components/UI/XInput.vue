@@ -18,8 +18,7 @@ export default {
 
 <style scoped>
 .x-input {
-  height: 25px;
-  padding: 5px;
+  padding: 14px;
   margin-bottom: 10px;
   border: 1px solid #bdbdbd;
   font-size: 16px;
