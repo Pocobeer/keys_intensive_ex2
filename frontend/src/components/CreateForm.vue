@@ -26,9 +26,18 @@ export default {
   },
   methods: {
     createPovar() {
-      this.$emit('create', { 
-        id: Date.now(),
-        ...this.povar });
+      const payload = {
+        Povar_name: this.povar.name,
+        Povar_experience: parseInt(this.povar.experience, 10),
+        Povar_rating: parseFloat(this.povar.rating),
+        Povar_age: parseInt(this.povar.age, 10)
+      };
+
+      this.$ajax.post('api/povars/', payload).then(response => {
+        const {data} = response
+        this.$emit('create', data)
+      })
+
       // Очистка полей после отправки формы
       this.povar.name = '';
       this.povar.experience = '';

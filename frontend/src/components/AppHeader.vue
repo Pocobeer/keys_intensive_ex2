@@ -1,13 +1,31 @@
 <script>
 export default {
-    name: "AppHeader"
+    name: "AppHeader",
+    methods:{
+        logout(){
+            this.$store.commit('auth/removeToken')
+            this.$router.push('/login')
+        },
+        povarpage(){
+            this.$router.push('/PovarPage')
+        },
+        dishpage(){
+            this.$router.push('/DishPage')
+        },
+        ingredientpage(){
+            this.$router.push('/IngredientPage')
+        }
+    }
 }
 </script>
 
 <template>
     <div class ="x-header">
         <strong>Иванов Владимир</strong>
-        <x-button>Выход</x-button>
+        <x-button @click="povarpage">Поварs</x-button>
+        <x-button @click="dishpage">Блюда</x-button>
+        <x-button @click="ingredientpage">Ингредиенты</x-button>
+        <x-button @click="logout">Выход</x-button>
     </div>
 </template>
 

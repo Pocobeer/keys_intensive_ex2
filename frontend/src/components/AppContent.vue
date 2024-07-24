@@ -11,13 +11,42 @@ export default {
         {id: 1, name: "Владимир", experience: 5, rating: "5", age: 19},
       ],
       showCreateForm: false,
-      selectSort: ' ',
+      selectSort: '',
       sortOptions: [
         {value: 'name', name: 'По имени'},
         {value: 'experience', name: 'По опыту'},
-        {value: 'rating', name: 'По рейтингу'},
       ]
     }
+  },
+  mounted(){
+    this.$ajax.get('api/povars/')
+      .then(response => {
+        console.log('API Response:', response.data);
+
+        // Извлекаем массив данных из свойства `results`
+        const results = response.data.results;
+        console.log('Extracted Results:', results);
+
+        if (Array.isArray(results)) {
+          // Преобразуем данные в формат, ожидаемый компонентом
+          this.povars = results.map(povar => ({
+            id: povar.id,
+            name: povar.Povar_name,
+            experience: povar.Povar_experience,
+            rating: povar.Povar_rating,
+            age: povar.Povar_age
+          }));
+          
+          console.log('Transformed Povars:', this.povars);
+        } else {
+          console.error('Expected array but got:', results);
+          this.povars = [];
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching povars:', error);
+        this.povars = [];
+      });
   },
   methods: {
     createPovar(data) {
@@ -25,7 +54,16 @@ export default {
       this.povars.push(data)
     },
     removePovar(povar){
-      this.povars = this.povars.filter(elem => elem.id !== povar.id)
+      const url = `api/povars/${povar.id}`;
+      console.log('Deleting Povar URL:', url);
+
+      this.$ajax.delete(url)
+        .then(() => {
+          this.povars = this.povars.filter(elem => elem.id !== povar.id);
+        })
+        .catch(error => {
+          console.error('Error removing povar:', error.response ? error.response.data : error.message);
+        });
     }
   },
   computed: {

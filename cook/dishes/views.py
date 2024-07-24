@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
-
+from django.views.decorators.csrf import csrf_exempt
 
 class PovarViewSet(viewsets.ModelViewSet):
     queryset = Povar.objects.all()
@@ -29,9 +29,14 @@ class IngredientsListCreate(generics.ListCreateAPIView):
     serializer_class = IngredientsSerializer
     permission_classes = [IsAuthenticated]
 
+class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Ingredients.objects.all()
+    serializer_class = IngredientsSerializer
+    permission_classes = [IsAuthenticated]
 
 class DishListCreate(APIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         dishes = Dish.objects.all()
         serializer = DishSerializer(dishes, many=True)
@@ -44,6 +49,32 @@ class DishListCreate(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)
 
+class DishDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, pk):
+        try:
+            return Dish.objects.get(pk=pk)
+        except Dish.DoesNotExist:
+            return None
+
+    def get(self, request, pk):
+        dish = self.get_object(pk)
+        serializer = DishSerializer(dish)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        dish = self.get_object(pk)
+        serializer = DishSerializer(dish, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def delete(self, request, pk):
+        dish = self.get_object(pk)
+        dish.delete()
+        return Response(status=204)
 
 # for user in User.objects.all():
 #     Token.objects.get_or_create(user=user)

@@ -1,29 +1,20 @@
 <script>
 import AppContent from "@/components/AppContent.vue";
 import AppHeader from "@/components/AppHeader.vue";
+import IngredientAppContent from "@/components/IngredientAppContent.vue";
 
 export default {
   components: {
-    AppHeader, AppContent
+    AppHeader, AppContent, IngredientAppContent
   },
   name: "App",
-  data() {
-    return {
-      name: '',
-      experience: '',
-      rating: '',
-      age: ''
-    }
-  },
 }
 </script>
 
 <template>
-  <div class="main-block">
-    <app-header></app-header>
-    <app-content></app-content>
+  <div>
+    <router-view></router-view>
   </div>
-
 </template>
 
 <style>
@@ -45,5 +36,4 @@ body {
   background-color: green !important;
   border-color: green !important;
 }
-
 </style>

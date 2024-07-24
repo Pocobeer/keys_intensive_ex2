@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from dishes.views import PovarViewSet, IngredientsListCreate, DishListCreate
+from dishes.views import PovarViewSet, IngredientsListCreate, DishListCreate, IngredientDetail, DishDetail
 from rest_framework.authtoken import views as authtoken_views
 
 
@@ -28,7 +28,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/ingredients/', IngredientsListCreate.as_view()),
+    path('api/ingredients/<int:pk>/', IngredientDetail.as_view()),
     path('api/dishes/', DishListCreate.as_view()),
+    path('api/dishes/<int:pk>/', DishDetail.as_view()),
     path('api-token-auth/', authtoken_views.obtain_auth_token),
     path('api/povars/', PovarViewSet.as_view({'get': 'list'})),
 ]

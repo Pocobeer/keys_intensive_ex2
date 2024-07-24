@@ -10,6 +10,7 @@ class Povar(models.Model):
     Povar_name = models.CharField(max_length=50)
     Povar_experience = models.IntegerField()
     Povar_rating = models.FloatField()
+    Povar_age = models.IntegerField()
 
 
 class Ingredients(models.Model):
