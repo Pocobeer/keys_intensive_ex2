@@ -1,5 +1,5 @@
 {
     "rewrites": [
-      { "source": "/api/(.*)", "destination": "//pocobor.pythonanywhere.com/" }
+      { "source": "/api/(.*)", "destination": "http://pocobor.pythonanywhere.com/" }
     ]
   }
