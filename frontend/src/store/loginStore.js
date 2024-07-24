@@ -20,7 +20,7 @@ export const loginStore = {
     actions: {
         async login({commit}, {username, password, router}) {
             try {
-                const response = await axios.post('http://pocobor.pythonanywhere.com/api-token-auth/', {
+                const response = await axios.post('//pocobor.pythonanywhere.com/api-token-auth/', {
                     'username': username,
                     'password': password
                 })
